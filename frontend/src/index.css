@@ -1,6 +1,7 @@
 @import "tailwindcss";
 
 @theme {
+  --font-sans: "Inter", sans-serif;
   /* 1. We tell Tailwind to create our own custom color names */
   --color-bg-base: var(--theme-bg);
   --color-bg-surface: var(--theme-surface);
@@ -33,13 +34,29 @@
   --theme-border: var(--color-slate-800);
 }
 
-@theme {
-  /* This enables dark mode via class, but respects system prefs by default if handled correctly in React */
-}
-
 /* We need this base layer to handle smooth transitions when switching modes */
 @layer base {
+  html {
+    scroll-behavior: smooth;
+  }
   body {
     @apply transition-colors duration-300 ease-in-out;
+  }
+}
+
+@layer utilities {
+  .animate-dropdown {
+    animation: dropdown 0.2s ease-out forwards;
+  }
+}
+
+@keyframes dropdown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
