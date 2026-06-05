@@ -1,0 +1,45 @@
+@import "tailwindcss";
+
+@theme {
+  /* 1. We tell Tailwind to create our own custom color names */
+  --color-bg-base: var(--theme-bg);
+  --color-bg-surface: var(--theme-surface);
+  --color-text-primary: var(--theme-text);
+  --color-text-muted: var(--theme-text-muted);
+  --color-brand: var(--theme-brand);
+  --color-brand-hover: var(--theme-brand-hover);
+  --color-border-subtle: var(--theme-border);
+}
+
+/* 2. LIGHT MODE COLORS (Default) */
+:root {
+  --theme-bg: var(--color-slate-50);
+  --theme-surface: var(--color-white);
+  --theme-text: var(--color-slate-900);
+  --theme-text-muted: var(--color-slate-500);
+  --theme-brand: var(--color-emerald-600);
+  --theme-brand-hover: var(--color-emerald-700);
+  --theme-border: var(--color-slate-200);
+}
+
+/* 3. DARK MODE COLORS */
+.dark {
+  --theme-bg: var(--color-slate-950);
+  --theme-surface: var(--color-slate-900);
+  --theme-text: var(--color-white);
+  --theme-text-muted: var(--color-slate-400);
+  --theme-brand: var(--color-emerald-500);
+  --theme-brand-hover: var(--color-emerald-600);
+  --theme-border: var(--color-slate-800);
+}
+
+@theme {
+  /* This enables dark mode via class, but respects system prefs by default if handled correctly in React */
+}
+
+/* We need this base layer to handle smooth transitions when switching modes */
+@layer base {
+  body {
+    @apply transition-colors duration-300 ease-in-out;
+  }
+}
