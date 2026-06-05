@@ -1,17 +1,30 @@
-import { useEffect } from "react";
+import React from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+
+// Import Pages
 import LandingPage from "./pages/LandingPage";
+import DashboardOverview from "./pages/DashboardOverview";
+
+// Import Layouts
+import DashboardLayout from "./components/layout/DashboardLayout";
 
 function App() {
-  // Keep our dark mode system detection here!
-  useEffect(() => {
-    if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
-      document.documentElement.classList.add("dark");
-    } else {
-      document.documentElement.classList.remove("dark");
-    }
-  }, []);
+  return (
+    <Router>
+      <Routes>
+        {/* PUBLIC ROUTE: The Landing Page */}
+        <Route path="/" element={<LandingPage />} />
 
-  return <LandingPage />;
+        {/* PRIVATE ROUTES: The Dashboard */}
+        {/* Notice how the layout wraps the pages! */}
+        <Route path="/dashboard" element={<DashboardLayout />}>
+          <Route index element={<DashboardOverview />} />
+          {/* We can easily add more pages later like this: */}
+          {/* <Route path="transactions" element={<TransactionsPage />} /> */}
+        </Route>
+      </Routes>
+    </Router>
+  );
 }
 
 export default App;
