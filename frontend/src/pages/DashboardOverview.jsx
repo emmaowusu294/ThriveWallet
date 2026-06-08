@@ -7,6 +7,7 @@ import {
   TrendingUp,
   ArrowUpRight,
   ArrowDownRight,
+  PieChart,
 } from "lucide-react";
 import {
   AreaChart,
@@ -23,6 +24,7 @@ const DashboardOverview = () => {
     useOutletContext();
   const [selectedTransaction, setSelectedTransaction] = useState(null);
 
+  // Data calculations
   const totalBalance = wallets.reduce((acc, wallet) => acc + wallet.balance, 0);
   const totalIncome = transactions
     .filter((txn) => txn.type === "income")
@@ -39,6 +41,9 @@ const DashboardOverview = () => {
       spent: txn.amount,
     }))
     .reverse();
+
+  // Check if user is "fresh" (no transactions yet)
+  const hasData = transactions.length > 0;
 
   return (
     <div className="animate-fade-in space-y-8 pb-10">
@@ -60,7 +65,6 @@ const DashboardOverview = () => {
             })}
           </div>
         </div>
-
         <div className="bg-bg-surface border border-border-subtle rounded-3xl p-6 shadow-sm min-w-0">
           <div className="flex items-center gap-3 mb-4 text-text-muted">
             <div className="p-2 bg-emerald-500/10 text-emerald-500 rounded-lg shrink-0">
@@ -77,7 +81,6 @@ const DashboardOverview = () => {
             })}
           </div>
         </div>
-
         <div className="bg-bg-surface border border-border-subtle rounded-3xl p-6 shadow-sm min-w-0">
           <div className="flex items-center gap-3 mb-4 text-text-muted">
             <div className="p-2 bg-red-500/10 text-red-500 rounded-lg shrink-0">
@@ -96,102 +99,139 @@ const DashboardOverview = () => {
         </div>
       </div>
 
-      {/* 2. CHART & ACTIVITY */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <div className="lg:col-span-2 bg-bg-surface border border-border-subtle rounded-3xl p-6 shadow-sm">
-          <h3 className="text-lg font-bold text-text-primary mb-6">
-            Spending Trend
-          </h3>
-          <div className="h-72 w-full">
-            <ResponsiveContainer width="100%" height="100%">
-              <AreaChart
-                data={dynamicChartData}
-                margin={{ top: 10, right: 0, left: -20, bottom: 0 }}
-              >
-                <defs>
-                  <linearGradient id="colorSpent" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#10B981" stopOpacity={0.3} />
-                    <stop offset="95%" stopColor="#10B981" stopOpacity={0} />
-                  </linearGradient>
-                </defs>
-                <CartesianGrid
-                  strokeDasharray="3 3"
-                  vertical={false}
-                  stroke="#374151"
-                  opacity={0.2}
-                />
-                <XAxis
-                  dataKey="day"
-                  axisLine={false}
-                  tickLine={false}
-                  tick={{ fill: "#6B7280", fontSize: 12 }}
-                  dy={10}
-                />
-                <YAxis
-                  axisLine={false}
-                  tickLine={false}
-                  tick={{ fill: "#6B7280", fontSize: 12 }}
-                />
-                <Tooltip
-                  contentStyle={{
-                    backgroundColor: "#1F2937",
-                    borderRadius: "12px",
-                    border: "none",
-                    color: "#F9FAFB",
-                  }}
-                />
-                <Area
-                  type="monotone"
-                  dataKey="spent"
-                  stroke="#10B981"
-                  strokeWidth={3}
-                  fill="url(#colorSpent)"
-                />
-              </AreaChart>
-            </ResponsiveContainer>
-          </div>
-        </div>
+      {/* 2. CONDITIONAL CONTENT */}
+      {hasData ? (
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* Chart Section */}
+          <div className="lg:col-span-2 bg-bg-surface border border-border-subtle rounded-3xl p-6 shadow-sm">
+            <h3 className="text-lg font-bold text-text-primary mb-6">
+              Spending Trend
+            </h3>
 
-        <div className="bg-bg-surface border border-border-subtle rounded-3xl p-6 shadow-sm flex flex-col">
-          <h3 className="text-lg font-bold text-text-primary mb-6">
-            Recent Activity
-          </h3>
-          <div className="flex-1 overflow-y-auto pr-2 space-y-4">
-            {transactions.map((txn) => (
-              <div
-                key={txn.id}
-                onClick={() => setSelectedTransaction(txn)}
-                className="flex items-center justify-between p-3 hover:bg-bg-base rounded-2xl cursor-pointer border border-transparent hover:border-border-subtle gap-4"
-              >
-                <div className="flex items-center gap-4 flex-1 min-w-0">
-                  <div
-                    className={`w-10 h-10 rounded-full flex items-center justify-center shrink-0 ${txn.type === "income" ? "bg-emerald-500/10 text-emerald-500" : "bg-bg-base text-text-muted"}`}
+            <div className="h-72 w-full">
+              {/* Pro Check: Simple loading guard */}
+              {dynamicChartData && dynamicChartData.length > 0 ? (
+                <ResponsiveContainer width="100%" height="100%">
+                  <AreaChart
+                    data={dynamicChartData}
+                    margin={{ top: 10, right: 0, left: -20, bottom: 0 }}
                   >
-                    {txn.type === "income" ? (
-                      <ArrowUpRight size={18} />
-                    ) : (
-                      <ArrowDownRight size={18} />
-                    )}
-                  </div>
-                  <div className="min-w-0">
-                    <p className="font-semibold text-text-primary text-sm truncate">
-                      {txn.desc}
-                    </p>
-                    <p className="text-xs text-text-muted">{txn.date}</p>
-                  </div>
+                    <defs>
+                      <linearGradient
+                        id="colorSpent"
+                        x1="0"
+                        y1="0"
+                        x2="0"
+                        y2="1"
+                      >
+                        <stop
+                          offset="5%"
+                          stopColor="#10B981"
+                          stopOpacity={0.3}
+                        />
+                        <stop
+                          offset="95%"
+                          stopColor="#10B981"
+                          stopOpacity={0}
+                        />
+                      </linearGradient>
+                    </defs>
+                    <CartesianGrid
+                      strokeDasharray="3 3"
+                      vertical={false}
+                      stroke="#374151"
+                      opacity={0.2}
+                    />
+                    <XAxis
+                      dataKey="day"
+                      axisLine={false}
+                      tickLine={false}
+                      tick={{ fill: "#6B7280", fontSize: 12 }}
+                      dy={10}
+                    />
+                    {/* Pro Check: Added YAxis hide to prevent clipping and ensure clean UI */}
+                    <YAxis hide />
+                    <Tooltip
+                      contentStyle={{
+                        backgroundColor: "#1F2937",
+                        borderRadius: "12px",
+                        border: "none",
+                        color: "#F9FAFB",
+                      }}
+                    />
+                    <Area
+                      type="monotone"
+                      dataKey="spent"
+                      stroke="#10B981"
+                      strokeWidth={3}
+                      fill="url(#colorSpent)"
+                    />
+                  </AreaChart>
+                </ResponsiveContainer>
+              ) : (
+                <div className="h-full flex items-center justify-center text-text-muted text-sm">
+                  No trend data available.
                 </div>
+              )}
+            </div>
+          </div>
+
+          {/* Activity Section */}
+          <div className="bg-bg-surface border border-border-subtle rounded-3xl p-6 shadow-sm flex flex-col">
+            <h3 className="text-lg font-bold text-text-primary mb-6">
+              Recent Activity
+            </h3>
+            <div className="flex-1 overflow-y-auto pr-2 space-y-4">
+              {transactions.map((txn) => (
                 <div
-                  className={`font-bold text-sm ${txn.type === "income" ? "text-emerald-500" : "text-text-primary"}`}
+                  key={txn.id}
+                  onClick={() => setSelectedTransaction(txn)}
+                  className="flex items-center justify-between p-3 hover:bg-bg-base rounded-2xl cursor-pointer border border-transparent hover:border-border-subtle gap-4"
                 >
-                  {txn.type === "income" ? "+" : "-"}
-                  {currentUser.currency}
-                  {txn.amount.toLocaleString()}
+                  <div className="flex items-center gap-4 flex-1 min-w-0">
+                    <div
+                      className={`w-10 h-10 rounded-full flex items-center justify-center shrink-0 ${txn.type === "income" ? "bg-emerald-500/10 text-emerald-500" : "bg-bg-base text-text-muted"}`}
+                    >
+                      {txn.type === "income" ? (
+                        <ArrowUpRight size={18} />
+                      ) : (
+                        <ArrowDownRight size={18} />
+                      )}
+                    </div>
+                    <div className="min-w-0">
+                      <p className="font-semibold text-text-primary text-sm truncate">
+                        {txn.desc}
+                      </p>
+                      <p className="text-xs text-text-muted">{txn.date}</p>
+                    </div>
+                  </div>
+                  <div
+                    className={`font-bold text-sm ${txn.type === "income" ? "text-emerald-500" : "text-text-primary"}`}
+                  >
+                    {txn.type === "income" ? "+" : "-"}
+                    {currentUser.currency}
+                    {txn.amount.toLocaleString()}
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         </div>
-      </div>
+      ) : (
+        /* EMPTY STATE UI */
+        <div className="flex flex-col items-center justify-center py-20 bg-bg-surface border border-border-subtle rounded-3xl text-center px-6">
+          <div className="w-16 h-16 bg-brand/10 rounded-full flex items-center justify-center mb-4">
+            <PieChart className="text-brand" size={32} />
+          </div>
+          <h3 className="text-xl font-bold text-text-primary mb-2">
+            No activity yet
+          </h3>
+          <p className="text-text-muted max-w-sm mb-6">
+            Your financial insights will appear here once you record your first
+            income or expense.
+          </p>
+        </div>
+      )}
 
       <TransactionDetailModal
         isOpen={!!selectedTransaction}

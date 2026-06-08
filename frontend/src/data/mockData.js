@@ -90,3 +90,18 @@ export const mockCategories = [
   { id: "cat4", name: "Freelance", type: "income" },
   { id: "cat5", name: "Salary", type: "income" },
 ];
+
+export const mockBudgets = [
+  {
+    id: "b1",
+    categoryId: "cat1", // Links to "Food & Drink"
+    limit: 500, // The cap the user sets
+    period: "monthly", // Allows for future expansion (weekly vs monthly)
+  },
+  {
+    id: "b2",
+    categoryId: "cat2", // Links to "Transport"
+    limit: 300,
+    period: "monthly",
+  },
+];

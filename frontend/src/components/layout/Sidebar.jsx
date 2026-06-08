@@ -8,6 +8,7 @@ import {
   LogOut,
   Menu,
   X,
+  PieChart,
 } from "lucide-react";
 
 const Sidebar = () => {
@@ -26,6 +27,12 @@ const Sidebar = () => {
       icon: <ArrowLeftRight size={20} />,
     },
     { name: "Budgets", path: "/dashboard/budgets", icon: <Target size={20} /> },
+
+    {
+      name: "Analytics",
+      path: "/dashboard/analytics",
+      icon: <PieChart size={20} />,
+    },
     {
       name: "Settings",
       path: "/dashboard/settings",

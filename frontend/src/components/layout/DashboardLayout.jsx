@@ -10,6 +10,7 @@ import {
   mockCategories,
   currentUser,
   chartData,
+  mockBudgets,
 } from "../../data/mockData";
 
 const DashboardLayout = () => {
@@ -88,6 +89,7 @@ const DashboardLayout = () => {
                 currentUser,
                 chartData,
                 categories,
+                mockBudgets,
                 handleAddTransaction,
                 handleDeleteTransaction,
               }}
