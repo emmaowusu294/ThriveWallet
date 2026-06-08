@@ -5,6 +5,9 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import LandingPage from "./pages/LandingPage";
 import DashboardOverview from "./pages/DashboardOverview";
 import Transactions from "./pages/Transactions";
+import Analytics from "./pages/Analytics";
+import Budgets from "./pages/Budgets";
+import Settings from "./pages/Settings";
 
 // Import Layouts
 import DashboardLayout from "./components/layout/DashboardLayout";
@@ -21,6 +24,9 @@ function App() {
         <Route path="/dashboard" element={<DashboardLayout />}>
           <Route index element={<DashboardOverview />} />
           <Route path="transactions" element={<Transactions />} />
+          <Route path="analytics" element={<Analytics />} />
+          <Route path="budgets" element={<Budgets />} />
+          <Route path="settings" element={<Settings />} />
           {/* We can easily add more pages later like this: */}
         </Route>
       </Routes>
