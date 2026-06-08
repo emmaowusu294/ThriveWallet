@@ -5,7 +5,6 @@
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <!-- Mobile Status Bar Colors -->
     <meta
       name="theme-color"
       media="(prefers-color-scheme: light)"
@@ -17,7 +16,6 @@
       content="#020617"
     />
 
-    <!-- Add these 3 lines for the Inter font -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -26,10 +24,22 @@
     />
 
     <title>ThriveWallet</title>
+
+    <script>
+      const savedTheme = localStorage.getItem("thrive-theme");
+      const systemPrefersDark = window.matchMedia(
+        "(prefers-color-scheme: dark)",
+      ).matches;
+
+      if (savedTheme === "dark" || (savedTheme === null && systemPrefersDark)) {
+        document.documentElement.classList.add("dark");
+      } else {
+        document.documentElement.classList.remove("dark");
+      }
+    </script>
   </head>
   <body>
     <div id="root"></div>
-    <!-- THIS script tag is what actually loads your React app! -->
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>
